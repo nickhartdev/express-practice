@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.use(express.json());
 
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Pokemon Box';
@@ -24,6 +25,23 @@ app.get('/api/v1/pokemon/:id', (request, response) => {
   });
 
   response.status(200).json({ pokemonMatch });
+})
+
+app.post('/api/v1/pokemon', (request, response) => {
+  const { id, name, types } = request.body;
+  const newMon = { id, name, types };
+  const requiredProperties = ['id',  'name', 'types'];
+
+  for (let property of requiredProperties) {
+    if (!request.body[property]) {
+      return response.status(422).json({
+        errorMessage: `Cannot POST: no property of ${property} in request`
+      })
+    }
+  }
+
+  app.locals.pokemon.push(newMon);
+  response.status(201).json({ newMon })
 })
 
 app.listen(app.get('port'), () => {
