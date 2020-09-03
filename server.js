@@ -11,7 +11,7 @@ app.locals.pokemon = [
 ]
 
 app.get('/', (request, response) => {
-  response.status(200).send('Welcome to your pokemon box!');
+  response.status(200).send('Welcome to Pokemon box!');
 })
 
 app.get('/api/v1/pokemon', (request, response) => {
@@ -58,6 +58,22 @@ app.patch('/api/v1/pokemon/:id', (request, response) => {
   } else {
     pokemonMatch[dataToUpdate[0]] = request.body[dataToUpdate];
     response.status(200).json({ pokemonMatch });
+  }
+})
+
+app.delete('/api/v1/pokemon/:id', (request, response) => {
+  const allPokemon = app.locals.pokemon;
+  const pokemonMatch = allPokemon.find(pokemon => {
+    return pokemon.id === request.params.id;
+  })
+
+  if (!pokemonMatch) {
+    response.status(422).json({
+      errorMessage: `Cannot DELETE: No pokemon with an id of ${request.params.id}`
+    })
+  } else {
+    allPokemon.splice(allPokemon.indexOf(pokemonMatch), 1);
+    response.status(200).json({ allPokemon });
   }
 })
 
