@@ -44,6 +44,23 @@ app.post('/api/v1/pokemon', (request, response) => {
   response.status(201).json({ newMon })
 })
 
+app.patch('/api/v1/pokemon/:id', (request, response) => {
+  const dataToUpdate = Object.keys(request.body)[0];
+  const requiredProperties = ['id', 'name', 'types'];
+  const pokemonMatch = app.locals.pokemon.find(pokemon => {
+    return pokemon.id === request.params.id;
+  })
+
+  if (!requiredProperties.some(property => property === dataToUpdate)) {
+    return response.status(422).json({
+      errorMessage: `Cannot PATCH: invalid key of ${dataToUpdate}`
+    })
+  } else {
+    pokemonMatch[dataToUpdate[0]] = request.body[dataToUpdate];
+    response.status(200).json({ pokemonMatch });
+  }
+})
+
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on http://localhost:${app.get('port')}.`);
 })
