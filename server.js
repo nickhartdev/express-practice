@@ -28,7 +28,7 @@ app.get('/api/v1/pokemon/:id', (request, response) => {
 })
 
 app.post('/api/v1/pokemon', (request, response) => {
-  const allPokemon = app.locals.pokemon;
+  const pokemon = app.locals.pokemon;
   const { id, name, types } = request.body;
   const newMon = { id, name, types };
   const requiredProperties = ['id',  'name', 'types'];
@@ -41,8 +41,8 @@ app.post('/api/v1/pokemon', (request, response) => {
     }
   }
 
-  allPokemon.push(newMon);
-  response.status(201).json({ allPokemon })
+  pokemon.push(newMon);
+  response.status(201).json({ pokemon })
 })
 
 app.patch('/api/v1/pokemon/:id', (request, response) => {
